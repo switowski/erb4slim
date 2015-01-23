@@ -3,32 +3,43 @@
 require 'erb4slim'
 require 'optparse'
 
-options = {:recursive => false, :directory => false}
+options = { recursive: false, all: false, delete: false, verbose: false }
 
 optparse = OptionParser.new do |opts|
-  opts.banner = "Usage: erb4slim [options] PATH_TO_FILE_OR_DIRECTORY"
+  opts.banner = 'Usage: erb4slim [options] PATH_TO_FILE_OR_DIRECTORY'
 
-  opts.separator ""
-  opts.separator "Options:"
+  opts.separator ''
+  opts.separator 'Options:'
 
-  opts.on("-d", "--directory", "Convert all files from the PATH_TO_FILE_OR_DIRECTORY directory") do
-    options[:directory] = true
+  opts.on('-a', '--all', 'Convert all files in the PATH_TO_FILE_OR_DIRECTORY\
+                          directory') do
+    options[:all] = true
   end
 
-  opts.on("-r", "--recursive", "Convert all files recursively, starting from the PATH_TO_FILE_OR_DIRECTORY directory") do
+  opts.on('-r', '--recursive', 'Convert all files recursively, starting from\
+                                the PATH_TO_FILE_OR_DIRECTORY directory') do
     options[:recursive] = true
   end
 
-  opts.on("-h", "--help", "Prints help") do
+  opts.on('-d', '--delete', 'Will delete all *.html.erb files (leaving only\
+                             slim files if the conversion was successful') do
+    options[:delete] = true
+  end
+
+  opts.on('-v', '--verbose', 'Verbose output') do
+    options[:verbose] = true
+  end
+
+  opts.on('-h', '--help', 'Prints help') do
     puts opts
     exit
   end
 
-  opts.separator ""
-  opts.separator "Examples:"
-  opts.separator "erb4slim index.html.erb"
-  opts.separator "erb4slim -c ./"
-  opts.separator "erb4slim -r ./app/views/"
+  opts.separator ''
+  opts.separator 'Examples:'
+  opts.separator 'erb4slim index.html.erb'
+  opts.separator 'erb4slim -c ./'
+  opts.separator 'erb4slim -r ./app/views/'
 end
 
 # First parse the options
@@ -36,17 +47,20 @@ optparse.parse!
 
 # Then scan the ARGV for filename
 filename = ARGV.pop
-unless filename
-  puts "You need to provide a file/directory name !"
+delete = options[:delete]
+verbose = options[:verbose]
+
+if filename
+  if options[:recursive]
+    Erb4slim.recursive(filename, delete, verbose)
+  elsif options[:all]
+    puts "Will convert all files in the #{filename} directory"
+    Erb4slim.all(filename, delete, verbose)
+  else
+    Erb4slim.convert(filename, delete, verbose)
+  end
+else
+  puts 'You need to provide a file/directory name !'
   puts optparse
   exit
-else
-  if options[:recursive]
-    Erb4slim.recursive(filename)
-  elsif options[:directory]
-    puts "current directory chosen"
-    Erb4slim.directory(filename)
-  else
-    Erb4slim.convert(filename)
-  end
 end
