@@ -23,8 +23,7 @@ ERB_TEMPLATE = <<TEMPLATE_END
 </html>
 TEMPLATE_END
 
-SLIM_OUTPUT = <<SLIM_END
-doctype html
+SLIM_OUTPUT = %q{doctype html
 html
   head
     title
@@ -38,7 +37,7 @@ html
       dl
         - user['accounts'].each do |account|
           p= account['name']
-SLIM_END
+}
 
 class Erb4slimTest < Minitest::Unit::TestCase
   def _create_test_file(filename)
@@ -70,7 +69,7 @@ class Erb4slimTest < Minitest::Unit::TestCase
   def test_converting_one_file
     Erb4slim.convert('./testdir/test1.html.erb')
     assert_equal true, File.exist?('./testdir/test1.html.slim')
-    assert_equal File.read('./testdir/test1.html.slim'), SLIM_OUTPUT
+    assert_equal SLIM_OUTPUT, File.read('./testdir/test1.html.slim')
   end
 
   def test_converting_with_delete

@@ -1,5 +1,7 @@
 # Erb4slim
+[![Code Climate](https://codeclimate.com/github/switowski/erb4slim/badges/gpa.svg)](https://codeclimate.com/github/switowski/erb4slim)
 
+NOT YET DEPLOYED TO RUBYGEMS !!!
 TODO: Write a gem description
 
 ## Installation
