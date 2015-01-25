@@ -6,10 +6,3 @@ rvm:
   - 2.2.0
 
 script: 'bundle exec rake'
-
-notifications:
-  email:
-    recipients:
-      - witowski.sebastian@gmail.com
-    on_failure: change
-    on_success: never

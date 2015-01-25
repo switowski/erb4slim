@@ -3,7 +3,7 @@
 require 'erb4slim'
 require 'optparse'
 
-options = { recursive: false, all: false, delete: false, verbose: false }
+options = { recursive: false, all: false, delete: false }
 
 optparse = OptionParser.new do |opts|
   opts.banner = 'Usage: erb4slim [options] PATH_TO_FILE_OR_DIRECTORY'
@@ -26,10 +26,6 @@ optparse = OptionParser.new do |opts|
     options[:delete] = true
   end
 
-  opts.on('-v', '--verbose', 'Verbose output') do
-    options[:verbose] = true
-  end
-
   opts.on('-h', '--help', 'Prints help') do
     puts opts
     exit
@@ -37,9 +33,10 @@ optparse = OptionParser.new do |opts|
 
   opts.separator ''
   opts.separator 'Examples:'
-  opts.separator 'erb4slim index.html.erb'
-  opts.separator 'erb4slim -c ./'
-  opts.separator 'erb4slim -r ./app/views/'
+  opts.separator 'erb4slim index.html.erb        to create a single slim file'
+  opts.separator 'erb4slim -a ./                 to create slim files for all files in a directory'
+  opts.separator 'erb4slim -r ./app/views/       to create slim files for all files in a directory and subdirectories'
+  opts.separator 'erb4slim -r -d ./app/views/    to replace all the .erb files with .slim files'
 end
 
 # First parse the options
@@ -48,16 +45,15 @@ optparse.parse!
 # Then scan the ARGV for filename
 filename = ARGV.pop
 delete = options[:delete]
-verbose = options[:verbose]
 
 if filename
   if options[:recursive]
-    Erb4slim.recursive(filename, delete, verbose)
+    Erb4slim.recursive(filename, delete)
   elsif options[:all]
     puts "Will convert all files in the #{filename} directory"
-    Erb4slim.all(filename, delete, verbose)
+    Erb4slim.all(filename, delete)
   else
-    Erb4slim.convert(filename, delete, verbose)
+    Erb4slim.convert(filename, delete)
   end
 else
   puts 'You need to provide a file/directory name !'

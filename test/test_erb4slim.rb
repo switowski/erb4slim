@@ -55,6 +55,7 @@ class Erb4slimTest < Minitest::Test
     Dir.chdir('testdir')
     _create_test_file('test1.html.erb')
     _create_test_file('test2.html.erb')
+    _create_test_file('other.html')
 
     Dir.mkdir('testdir_inside')
     Dir.chdir('testdir_inside')
@@ -79,6 +80,14 @@ class Erb4slimTest < Minitest::Test
     assert_equal false, File.exist?('./testdir/test1.html.erb')
     assert_equal true, File.exist?('./testdir/test2.html.slim')
     assert_equal false, File.exist?('./testdir/test2.html.erb')
+  end
+
+  def test_should_not_convert_other_files
+    Erb4slim.all('./testdir', true)
+    assert_equal true, File.exist?('./testdir/test1.html.slim')
+    assert_equal false, File.exist?('./testdir/test1.html.erb')
+    assert_equal true, File.exist?('./testdir/other.html')
+    assert_equal false, File.exist?('./testdir/other.slim')
   end
 
   def test_converting_all_files
