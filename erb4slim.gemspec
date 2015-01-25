@@ -19,7 +19,8 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency 'bundler', '~> 1.7'
   spec.add_development_dependency 'rake', '~> 10.0'
+  spec.add_development_dependency 'minitest'
 
-  spec.add_dependency 'html2haml'
+  spec.add_dependency 'html2haml', '~> 2.0'
   spec.add_dependency 'haml2slim'
 end

@@ -1,8 +1,8 @@
+gem 'minitest'
 require 'minitest/autorun'
 require 'erb4slim'
 
-ERB_TEMPLATE = <<TEMPLATE_END
-<!DOCTYPE html>
+ERB_TEMPLATE = %q{<!DOCTYPE html>
 <html>
   <head>
     <title><%= @title %> </title>
@@ -21,17 +21,18 @@ ERB_TEMPLATE = <<TEMPLATE_END
     <% end %>
   </body>
 </html>
-TEMPLATE_END
+}
 
 SLIM_OUTPUT = %q{doctype html
 html
   head
+    meta content=("text/html; charset=UTF-8") http-equiv="Content-Type" /
     title
       = @title
     = stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true
     = javascript_include_tag "application", "data-turbolinks-track" => true
     = csrf_meta_tags
-  body class=@controller.controller_name 
+  body class="#{@controller.controller_name}" 
     - @users.each do |user|
       h3= user['name']
       dl
@@ -39,7 +40,7 @@ html
           p= account['name']
 }
 
-class Erb4slimTest < Minitest::Unit::TestCase
+class Erb4slimTest < Minitest::Test
   def _create_test_file(filename)
     File.open(filename, 'w') do |f|
       f.write(ERB_TEMPLATE)
